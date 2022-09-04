@@ -8,6 +8,13 @@ interface ILink {
   target: string;
   counter: number;
 }
+
+interface initialState {
+  Links: ILink[];
+  option: {
+    offset: number;
+  };
+}
 interface IPayloadLink {
   payload: ILink[];
 }
@@ -17,11 +24,17 @@ interface IOptions {
   offset: number;
 }
 
-const initialState: ILink[] = [];
+const initialState: initialState = {
+  Links: [],
+  option: {
+    offset: 0,
+  },
+};
 
 export const getLinks = createAsyncThunk(
   "links/getLinks",
   async (options: IOptions) => {
+    console.log();
     let config = {
       headers: {
         Authorization: localStorage.token,
@@ -40,14 +53,23 @@ export const getLinks = createAsyncThunk(
 const linkSlice = createSlice({
   name: "link",
   initialState,
-  reducers: {},
+  reducers: {
+    clearState: (state) => {
+      console.log(state);
+      state.Links.length = 0;
+      console.log(state);
+    },
+    setPage: (state, { payload }) => {
+      payload === "PLUS" ? state.option.offset++ : state.option.offset--;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getLinks.fulfilled, (state, { payload }: IPayloadLink) => {
-      state = payload;
+      state.Links = payload;
       return state;
     });
   },
 });
 
 export default linkSlice.reducer;
-export const {} = linkSlice.actions;
+export const { clearState, setPage } = linkSlice.actions;
