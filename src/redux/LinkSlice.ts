@@ -46,13 +46,6 @@ const initialState: initialState = {
 export const getLinks = createAsyncThunk(
   "links/getLinks",
   async (options: IOptions) => {
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: sessionStorage.token,
-      },
-    };
-
     const { data } = await axios.get(
       `http://79.143.31.216/statistics?limit=${options.limit}&offset=${options.offset}`,
       {
@@ -69,8 +62,6 @@ export const getLinks = createAsyncThunk(
 export const SquezzeLink = createAsyncThunk(
   "links/SquezzeLink",
   async (link: string) => {
-    console.log(1);
-
     const { data } = await axios.post(
       `http://79.143.31.216/squeeze?link=${link}`,
       {},

@@ -111,9 +111,15 @@ const SquezaPage = () => {
         )}
         {state.link.newLink ? (
           <div>
-            <div>{state.link.newLink.short}</div>
+            <div>
+              {state.link.newLink.short
+                ? `http://79.143.31.216/s/${state.link.newLink.short}`
+                : ""}
+            </div>
             <div>{state.link.newLink.target}</div>
-            <div>{state.link.newLink.counter}</div>
+            <div>
+              {state.link.newLink.target ? state.link.newLink.counter : ""}
+            </div>
           </div>
         ) : (
           ""
