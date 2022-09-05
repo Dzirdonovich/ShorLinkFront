@@ -58,7 +58,7 @@ export const login = createAsyncThunk(
       "http://79.143.31.216/login",
       qs.stringify({ username: newUser.username, password: newUser.password })
     );
-    localStorage.token = "Bearer " + response.data.access_token;
+    sessionStorage.setItem("token", "Bearer " + response.data.access_token);
     console.log(localStorage.token);
 
     // const params = new URLSearchParams();

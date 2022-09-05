@@ -6,9 +6,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { clearState, getLinks, setPage } from "../redux/LinkSlice";
+import { clearState, getLinks, setPage, SquezzeLink } from "../redux/LinkSlice";
 
 const SquezaPage = () => {
+  const [link, setLink] = useState("");
   const currentEl = useRef(null);
   const dispatch = useAppDispatch();
   const [disabled, setDisabled] = useState(false);
@@ -22,13 +23,13 @@ const SquezaPage = () => {
     const offset = state.link.option.offset;
     state.link.option.loading === false
       ? dispatch(getLinks({ limit: 10, offset }))
-      : console.log();
+      : dispatch(getLinks({ limit: 10, offset }));
     console.log(state.link.Links);
 
     // state.link.Links.length === 0
     //   ? dispatch(getLinks({ limit: 10, offset }))
     //   : console.log(offset);
-  }, [state.link.option.offset]);
+  }, [dispatch]);
   return (
     <div className="mx-3">
       <div className=" w-full flex justify-between">
@@ -90,6 +91,33 @@ const SquezaPage = () => {
           {" "}
           next{" "}
         </button>
+      </div>
+      <div className="flex items-center flex-col">
+        <div className=" font-bold">Создать ссылку</div>
+        <input
+          className="text-center"
+          type="text"
+          value={link}
+          onChange={(event) => setLink(event.target.value)}
+          placeholder="Введите ссылку"
+        />
+        {link.length <= 3 ? (
+          <button disabled={true}>Отправить ссылку</button>
+        ) : (
+          <button disabled={false} onClick={() => dispatch(SquezzeLink(link))}>
+            {" "}
+            Отправить ссылку
+          </button>
+        )}
+        {state.link.newLink ? (
+          <div>
+            <div>{state.link.newLink.short}</div>
+            <div>{state.link.newLink.target}</div>
+            <div>{state.link.newLink.counter}</div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

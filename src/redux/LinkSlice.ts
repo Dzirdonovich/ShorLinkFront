@@ -11,13 +11,17 @@ interface ILink {
 
 interface initialState {
   Links: ILink[];
+  newLink: ILink;
   option: {
     offset: number;
     loading: boolean;
   };
 }
-interface IPayloadLink {
+interface IPayloadLinks {
   payload: ILink[];
+}
+interface IPayloadLink {
+  payload: ILink;
 }
 
 interface IOptions {
@@ -27,6 +31,12 @@ interface IOptions {
 
 const initialState: initialState = {
   Links: [],
+  newLink: {
+    id: 0,
+    short: "",
+    target: "",
+    counter: 0,
+  },
   option: {
     offset: 0,
     loading: false,
@@ -36,16 +46,40 @@ const initialState: initialState = {
 export const getLinks = createAsyncThunk(
   "links/getLinks",
   async (options: IOptions) => {
-    console.log();
     let config = {
       headers: {
-        Authorization: localStorage.token,
+        "Content-Type": "application/json",
+        Authorization: sessionStorage.token,
       },
     };
 
     const { data } = await axios.get(
       `http://79.143.31.216/statistics?limit=${options.limit}&offset=${options.offset}`,
-      config
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: sessionStorage.token,
+        },
+      }
+    );
+    return data;
+  }
+);
+
+export const SquezzeLink = createAsyncThunk(
+  "links/SquezzeLink",
+  async (link: string) => {
+    console.log(1);
+
+    const { data } = await axios.post(
+      `http://79.143.31.216/squeeze?link=${link}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: sessionStorage.token,
+        },
+      }
     );
 
     return data;
@@ -67,10 +101,15 @@ const linkSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(SquezzeLink.fulfilled, (state, { payload }: IPayloadLink) => {
+        state.newLink = payload;
+        return state;
+      })
       .addCase(getLinks.pending, (state) => {
         state.option.loading = true;
+        return state;
       })
-      .addCase(getLinks.fulfilled, (state, { payload }: IPayloadLink) => {
+      .addCase(getLinks.fulfilled, (state, { payload }: IPayloadLinks) => {
         state.Links = payload;
         state.option.loading = false;
         return state;
