@@ -15,6 +15,8 @@ const Register = () => {
   };
   return (
     <form className=" w-1/12  m-auto flex flex-col items-center  justify-center">
+      <div>Регистрация</div>
+
       <div>
         <label htmlFor=""></label>
         <input
@@ -41,7 +43,7 @@ const Register = () => {
         <button onClick={(event) => onClickHandler(event)} type="submit">
           Регистрация
         </button>
-        <Link to={"/login"}>Логин</Link>
+        <Link to={"/"}>Логин</Link>
       </div>
     </form>
   );

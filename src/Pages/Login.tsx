@@ -11,8 +11,10 @@ const Login = () => {
   const onClickHandler = (e: any) => {
     dispatch(login({ username: username, password: password }));
   };
+
   return (
     <form className=" w-1/12  m-auto flex flex-col items-center  justify-center">
+      <div>Логин</div>
       <div>
         <label htmlFor=""></label>
         <input

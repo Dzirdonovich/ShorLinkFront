@@ -13,6 +13,7 @@ interface initialState {
   Links: ILink[];
   option: {
     offset: number;
+    loading: boolean;
   };
 }
 interface IPayloadLink {
@@ -28,6 +29,7 @@ const initialState: initialState = {
   Links: [],
   option: {
     offset: 0,
+    loading: false,
   },
 };
 
@@ -45,7 +47,7 @@ export const getLinks = createAsyncThunk(
       `http://79.143.31.216/statistics?limit=${options.limit}&offset=${options.offset}`,
       config
     );
-    console.log(data);
+
     return data;
   }
 );
@@ -64,10 +66,15 @@ const linkSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getLinks.fulfilled, (state, { payload }: IPayloadLink) => {
-      state.Links = payload;
-      return state;
-    });
+    builder
+      .addCase(getLinks.pending, (state) => {
+        state.option.loading = true;
+      })
+      .addCase(getLinks.fulfilled, (state, { payload }: IPayloadLink) => {
+        state.Links = payload;
+        state.option.loading = false;
+        return state;
+      });
   },
 });
 

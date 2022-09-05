@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./App";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -17,7 +16,7 @@ root.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route element={<Login />} path={"/login"} />
+        <Route element={<Login />} path={"/"} />
         <Route element={<Register />} path={"register"} />
         <Route element={<SquezaPage />} path={"squezze"} />
       </Routes>
